@@ -34,6 +34,7 @@
 
 #include <gz/physics/ForwardStep.hh>
 #include <gz/physics/GetContacts.hh>
+#include <gz/physics/GetDummyPoint.hh>
 #include <gz/physics/ContactProperties.hh>
 #include <gz/physics/SpecifyData.hh>
 
@@ -56,7 +57,8 @@ struct SimulationFeatureList : FeatureList<
 #ifdef DART_HAS_CONTACT_SURFACE
   SetContactPropertiesCallbackFeature,
 #endif
-  GetContactsFromLastStepFeature
+  GetContactsFromLastStepFeature,
+  GetDummyPointFromLastStepFeature
 > { };
 
 #ifdef DART_HAS_CONTACT_SURFACE
@@ -97,6 +99,9 @@ class SimulationFeatures :
   public: using GetContactsFromLastStepFeature::Implementation<FeaturePolicy3d>
     ::ContactInternal;
 
+  public:
+    using GetDummyPointFromLastStepFeature::Implementation<FeaturePolicy3d>::DummyPointInternal;
+
   public: SimulationFeatures() = default;
   public: ~SimulationFeatures() override = default;
 
@@ -111,6 +116,9 @@ class SimulationFeatures :
   public: void Write(ChangedWorldPoses &_changedPoses) const;
 
   public: std::vector<ContactInternal> GetContactsFromLastStep(
+      const Identity &_worldID) const override;
+
+  public: DummyPointInternal GetDummyPointFromLastStep(
       const Identity &_worldID) const override;
 
   /// \brief link poses from the most recent pose change/update.

@@ -165,12 +165,24 @@ void SimulationFeatures::Write(ChangedWorldPoses &_changedPoses) const
   this->prevLinkPoses = std::move(newPoses);
 }
 
+SimulationFeatures::DummyPointInternal
+SimulationFeatures::GetDummyPointFromLastStep(const Identity &_worldID) const
+{
+
+  SimulationFeatures::DummyPointInternal out;
+  out.point = Eigen::Vector3d(1, 2, 3);
+  return out;
+}
+
 std::vector<SimulationFeatures::ContactInternal>
 SimulationFeatures::GetContactsFromLastStep(const Identity &_worldID) const
 {
   std::vector<SimulationFeatures::ContactInternal> outContacts;
   auto *const world = this->ReferenceInterface<DartWorld>(_worldID);
   const auto colResult = world->getLastCollisionResult();
+
+  // world->getConstraintSolver()->getCollisionDetector()->raycast(
+  //   Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero());
 
   for (const auto &dtContact : colResult.getContacts())
   {
