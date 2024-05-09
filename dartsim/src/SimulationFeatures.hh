@@ -120,8 +120,8 @@ class SimulationFeatures :
 
   public: DummyPoint GetDummyPointFromLastStep(
       const Identity &_worldID,
-      const gz::math::Vector3d &_from,
-      const gz::math::Vector3d &_end) const override;
+      const LinearVector3d &_from,
+      const LinearVector3d &_end) const override;
 
   /// \brief link poses from the most recent pose change/update.
   /// The key is the link's ID, and the value is the link's pose

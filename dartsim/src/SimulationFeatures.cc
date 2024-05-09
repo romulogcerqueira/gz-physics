@@ -168,12 +168,13 @@ void SimulationFeatures::Write(ChangedWorldPoses &_changedPoses) const
 SimulationFeatures::DummyPoint
 SimulationFeatures::GetDummyPointFromLastStep(
   const Identity &_worldID,
-  const gz::math::Vector3d &_from,
-  const gz::math::Vector3d &_end) const
+  const LinearVector3d &_from,
+  const LinearVector3d &_end) const
 {
   SimulationFeatures::DummyPoint out;
-  out.point =
-    gz::math::eigen3::convert(Eigen::Vector3d(_from.X() * 2, _from.Y() * 2, _from.Z() * 2));
+  out.point[0] = _from[0] * 2;
+  out.point[1] = _from[1] * 2;
+  out.point[2] = _from[2] * 2;
   return out;
 }
 

@@ -30,7 +30,7 @@ namespace physics
 template <typename PolicyT, typename FeaturesT>
 auto GetDummyPointFromLastStepFeature::World<
     PolicyT, FeaturesT>::GetDummyPointFromLastStep(
-      const gz::math::Vector3d &_from, const gz::math::Vector3d &_end
+      const VectorType &_from, const VectorType &_end
     ) const -> Dummy
 {
   auto dummyPointInternal =
