@@ -36,12 +36,9 @@ class GZ_PHYSICS_VISIBLE GetDummyPointFromLastStepFeature
   public: template <typename PolicyT>
   struct DummyPointT
   {
-    using VectorType = typename FromPolicy<PolicyT>::template Use<Vector>;
-
     /// \brief The point of contact expressed in the world frame
-    VectorType point;
+    gz::math::Vector3d point;
   };
-
 
   public: template <typename PolicyT, typename FeaturesT>
   class World : public virtual Feature::World<PolicyT, FeaturesT>
@@ -50,17 +47,20 @@ class GZ_PHYSICS_VISIBLE GetDummyPointFromLastStepFeature
     public: using Dummy = SpecifyData<RequireData<DummyPoint>>;
 
     /// \brief Get contacts generated in the previous simulation step
-    public: Dummy GetDummyPointFromLastStep() const;
+    public: Dummy GetDummyPointFromLastStep(
+      const gz::math::Vector3d &_from, const gz::math::Vector3d &_end
+    ) const;
   };
 
   public: template <typename PolicyT>
   class Implementation : public virtual Feature::Implementation<PolicyT>
   {
-    public: using VectorType = typename FromPolicy<PolicyT>::template Use<Vector>;
     public: using DummyPoint = DummyPointT<PolicyT>;
 
     public: virtual DummyPoint GetDummyPointFromLastStep(
-        const Identity &_worldID) const = 0;
+        const Identity &_worldID,
+        const gz::math::Vector3d &_from,
+        const gz::math::Vector3d &_to) const = 0;
   };
 };
 }

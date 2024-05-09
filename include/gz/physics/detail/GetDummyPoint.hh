@@ -29,11 +29,13 @@ namespace physics
 /////////////////////////////////////////////////
 template <typename PolicyT, typename FeaturesT>
 auto GetDummyPointFromLastStepFeature::World<
-    PolicyT, FeaturesT>::GetDummyPointFromLastStep() const -> Dummy
+    PolicyT, FeaturesT>::GetDummyPointFromLastStep(
+      const gz::math::Vector3d &_from, const gz::math::Vector3d &_end
+    ) const -> Dummy
 {
   auto dummyPointInternal =
       this->template Interface<GetDummyPointFromLastStepFeature>()
-          ->GetDummyPointFromLastStep(this->identity);
+          ->GetDummyPointFromLastStep(this->identity, _from, _end);
 
   DummyPoint point {dummyPointInternal.point};
   Dummy output;
