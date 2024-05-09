@@ -100,7 +100,7 @@ class SimulationFeatures :
     ::ContactInternal;
 
   public:
-    using GetDummyPointFromLastStepFeature::Implementation<FeaturePolicy3d>::DummyPointInternal;
+    using GetDummyPointFromLastStepFeature::Implementation<FeaturePolicy3d>::DummyPoint;
 
   public: SimulationFeatures() = default;
   public: ~SimulationFeatures() override = default;
@@ -118,7 +118,7 @@ class SimulationFeatures :
   public: std::vector<ContactInternal> GetContactsFromLastStep(
       const Identity &_worldID) const override;
 
-  public: DummyPointInternal GetDummyPointFromLastStep(
+  public: DummyPoint GetDummyPointFromLastStep(
       const Identity &_worldID) const override;
 
   /// \brief link poses from the most recent pose change/update.

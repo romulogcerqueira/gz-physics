@@ -165,11 +165,11 @@ void SimulationFeatures::Write(ChangedWorldPoses &_changedPoses) const
   this->prevLinkPoses = std::move(newPoses);
 }
 
-SimulationFeatures::DummyPointInternal
+SimulationFeatures::DummyPoint
 SimulationFeatures::GetDummyPointFromLastStep(const Identity &_worldID) const
 {
 
-  SimulationFeatures::DummyPointInternal out;
+  SimulationFeatures::DummyPoint out;
   out.point = Eigen::Vector3d(1, 2, 3);
   return out;
 }
