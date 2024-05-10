@@ -169,9 +169,38 @@ SimulationFeatures::DummyPoint
 SimulationFeatures::GetDummyPointFromLastStep(
   const Identity &_worldID,
   const LinearVector3d &_from,
-  const LinearVector3d &_end) const
+  const LinearVector3d &_to) const
 {
   SimulationFeatures::DummyPoint out;
+  auto *const world = this->ReferenceInterface<DartWorld>(_worldID);
+  
+  Eigen::Vector3d from(_from[0], _from[1], _from[2]);
+  Eigen::Vector3d to(_to[0], _to[1], _to[2]);
+
+  dart::collision::RaycastResult result;
+  auto solver = world->getConstraintSolver();
+  auto detector = solver->getCollisionDetector();
+  auto group = solver->getCollisionGroup().get();
+  auto option = dart::collision::RaycastOption();
+
+  bool has_hit = 
+    detector->raycast(
+      group,
+      from,
+      to,
+      dart::collision::RaycastOption(),
+      &result);
+
+  std::cout << "====== RAYCAST RESULT" << std::endl;
+  std::cout << "Has hit: " << has_hit << std::endl;
+  for (size_t i = 0; i < result.mRayHits.size(); i++) {
+    std::cout << "Hit " << i << std::endl;
+    std::cout << "  Point: " << result.mRayHits[i].mPoint.transpose() << std::endl;
+    std::cout << "  Fraction: " << result.mRayHits[i].mFraction << std::endl;
+    std::cout << "  Normal: " << result.mRayHits[i].mNormal.transpose() << std::endl;
+  }
+
+
   out.point[0] = _from[0] * 2;
   out.point[1] = _from[1] * 2;
   out.point[2] = _from[2] * 2;
