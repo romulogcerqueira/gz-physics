@@ -165,13 +165,13 @@ void SimulationFeatures::Write(ChangedWorldPoses &_changedPoses) const
   this->prevLinkPoses = std::move(newPoses);
 }
 
-SimulationFeatures::DummyPoint
-SimulationFeatures::GetDummyPointFromLastStep(
+SimulationFeatures::RayIntersection
+SimulationFeatures::GetRayIntersectionsFromLastStep(
   const Identity &_worldID,
   const LinearVector3d &_from,
   const LinearVector3d &_to) const
 {
-  SimulationFeatures::DummyPoint out;
+  SimulationFeatures::RayIntersection out;
   auto *const world = this->ReferenceInterface<DartWorld>(_worldID);
   
   Eigen::Vector3d from(_from[0], _from[1], _from[2]);

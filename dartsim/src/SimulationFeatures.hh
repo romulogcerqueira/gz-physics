@@ -34,7 +34,7 @@
 
 #include <gz/physics/ForwardStep.hh>
 #include <gz/physics/GetContacts.hh>
-#include <gz/physics/GetDummyPoint.hh>
+#include <gz/physics/GetRayIntersections.hh>
 #include <gz/physics/ContactProperties.hh>
 #include <gz/physics/SpecifyData.hh>
 
@@ -58,7 +58,7 @@ struct SimulationFeatureList : FeatureList<
   SetContactPropertiesCallbackFeature,
 #endif
   GetContactsFromLastStepFeature,
-  GetDummyPointFromLastStepFeature
+  GetRayIntersectionsFromLastStepFeature
 > { };
 
 #ifdef DART_HAS_CONTACT_SURFACE
@@ -100,7 +100,7 @@ class SimulationFeatures :
     ::ContactInternal;
 
   public:
-    using GetDummyPointFromLastStepFeature::Implementation<FeaturePolicy3d>::DummyPoint;
+    using GetRayIntersectionsFromLastStepFeature::Implementation<FeaturePolicy3d>::RayIntersection;
 
   public: SimulationFeatures() = default;
   public: ~SimulationFeatures() override = default;
@@ -118,7 +118,7 @@ class SimulationFeatures :
   public: std::vector<ContactInternal> GetContactsFromLastStep(
       const Identity &_worldID) const override;
 
-  public: DummyPoint GetDummyPointFromLastStep(
+  public: RayIntersection GetRayIntersectionsFromLastStep(
       const Identity &_worldID,
       const LinearVector3d &_from,
       const LinearVector3d &_end) const override;

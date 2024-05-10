@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef GZ_PHYSICS_GETDUMMYPOINT_HH_
-#define GZ_PHYSICS_GETDUMMYPOINT_HH_
+#ifndef GZ_PHYSICS_GETRAYINTERSECTIONS_HH_
+#define GZ_PHYSICS_GETRAYINTERSECTIONS_HH_
 
 #include <vector>
 #include <gz/physics/FeatureList.hh>
@@ -28,17 +28,17 @@ namespace gz
 {
 namespace physics
 {
-/// \brief GetDummyPointFromLastStepFeature is a feature for retrieving the list
-/// of contacts generated in the previous simulation step.
-class GZ_PHYSICS_VISIBLE GetDummyPointFromLastStepFeature
+/// \brief GetRayIntersectionsFromLastStepFeature is a feature for retrieving the list
+/// of ray intersections generated in the previous simulation step.
+class GZ_PHYSICS_VISIBLE GetRayIntersectionsFromLastStepFeature
     : public virtual FeatureWithRequirements<ForwardStep>
 {
   public: template <typename PolicyT>
-  struct DummyPointT
+  struct RayIntersectionT
   {
     public: using VectorType = typename FromPolicy<PolicyT>::template Use<LinearVector>;
   
-    /// \brief The point of contact expressed in the world frame
+    /// \brief The hit point in the world coordinates
     VectorType point;
   };
 
@@ -46,28 +46,27 @@ class GZ_PHYSICS_VISIBLE GetDummyPointFromLastStepFeature
   class World : public virtual Feature::World<PolicyT, FeaturesT>
   {
     public: using VectorType = typename FromPolicy<PolicyT>::template Use<LinearVector>;
-    public: using DummyPoint = DummyPointT<PolicyT>;
-    public: using Dummy = SpecifyData<RequireData<DummyPoint>>;
+    public: using RayIntersection = RayIntersectionT<PolicyT>;
+    public: using RayIntersectionData = SpecifyData<RequireData<RayIntersection>>;
 
-    /// \brief Get contacts generated in the previous simulation step
-    public: Dummy GetDummyPointFromLastStep(
-      const VectorType &_from, const VectorType &_end
-    ) const;
+    /// \brief Get intersections generated in the previous simulation step
+    public: RayIntersectionData GetRayIntersectionsFromLastStep(
+      const VectorType &_from, const VectorType &_to) const;
   };
 
   public: template <typename PolicyT>
   class Implementation : public virtual Feature::Implementation<PolicyT>
   {
-    public: using DummyPoint = DummyPointT<PolicyT>;
+    public: using RayIntersection = RayIntersectionT<PolicyT>;
     public: using VectorType = typename FromPolicy<PolicyT>::template Use<LinearVector>;
 
-    public: virtual DummyPoint GetDummyPointFromLastStep(
+    public: virtual RayIntersection GetRayIntersectionsFromLastStep(
       const Identity &_worldID, const VectorType &_from, const VectorType &_to) const = 0;
   };
 };
 }
 }
 
-#include "gz/physics/detail/GetDummyPoint.hh"
+#include "gz/physics/detail/GetRayIntersections.hh"
 
-#endif /* end of include guard: GZ_PHYSICS_GETDUMMYPOINT_HH_ */
+#endif /* end of include guard: GZ_PHYSICS_GETRAYINTERSECTIONS_HH_ */

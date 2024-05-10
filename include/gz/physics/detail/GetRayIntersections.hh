@@ -15,12 +15,12 @@
  *
  */
 
-#ifndef GZ_PHYSICS_DETAIL_GETDUMMYPOINT_HH_
-#define GZ_PHYSICS_DETAIL_GETDUMMYPOINT_HH_
+#ifndef GZ_PHYSICS_DETAIL_GETRAYINTERSECTIONS_HH_
+#define GZ_PHYSICS_DETAIL_GETRAYINTERSECTIONS_HH_
 
 #include <utility>
 #include <vector>
-#include <gz/physics/GetDummyPoint.hh>
+#include <gz/physics/GetRayIntersections.hh>
 
 namespace gz
 {
@@ -28,18 +28,18 @@ namespace physics
 {
 /////////////////////////////////////////////////
 template <typename PolicyT, typename FeaturesT>
-auto GetDummyPointFromLastStepFeature::World<
-    PolicyT, FeaturesT>::GetDummyPointFromLastStep(
-      const VectorType &_from, const VectorType &_end
-    ) const -> Dummy
+auto GetRayIntersectionsFromLastStepFeature::World<
+    PolicyT, FeaturesT>::GetRayIntersectionsFromLastStep(
+      const VectorType &_from, const VectorType &_to
+    ) const -> RayIntersectionData
 {
-  auto dummyPointInternal =
-      this->template Interface<GetDummyPointFromLastStepFeature>()
-          ->GetDummyPointFromLastStep(this->identity, _from, _end);
+  auto result =
+      this->template Interface<GetRayIntersectionsFromLastStepFeature>()
+          ->GetRayIntersectionsFromLastStep(this->identity, _from, _to);
 
-  DummyPoint point {dummyPointInternal.point};
-  Dummy output;
-  output.template Get<DummyPoint>() = std::move(point);
+  RayIntersection point {result.point};
+  RayIntersectionData output;
+  output.template Get<RayIntersection>() = std::move(point);
   return output;
 }
 
