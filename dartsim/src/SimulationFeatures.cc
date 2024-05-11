@@ -184,12 +184,7 @@ SimulationFeatures::GetRayIntersectionsFromLastStep(
   auto option = dart::collision::RaycastOption();
 
   bool has_hit = 
-    detector->raycast(
-      group,
-      from,
-      to,
-      dart::collision::RaycastOption(),
-      &result);
+    detector->raycast(group, from, to, option, &result);
 
   std::cout << "====== RAYCAST RESULT" << std::endl;
   std::cout << "Has hit: " << has_hit << std::endl;
@@ -198,12 +193,13 @@ SimulationFeatures::GetRayIntersectionsFromLastStep(
     std::cout << "  Point: " << result.mRayHits[i].mPoint.transpose() << std::endl;
     std::cout << "  Fraction: " << result.mRayHits[i].mFraction << std::endl;
     std::cout << "  Normal: " << result.mRayHits[i].mNormal.transpose() << std::endl;
+
+    out.point = result.mRayHits[i].mPoint;
+    out.normal = result.mRayHits[i].mNormal;
+    out.fraction = result.mRayHits[i].mFraction;
   }
 
 
-  out.point[0] = _from[0] * 2;
-  out.point[1] = _from[1] * 2;
-  out.point[2] = _from[2] * 2;
   return out;
 }
 

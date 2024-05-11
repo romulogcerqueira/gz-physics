@@ -36,10 +36,17 @@ class GZ_PHYSICS_VISIBLE GetRayIntersectionsFromLastStepFeature
   public: template <typename PolicyT>
   struct RayIntersectionT
   {
-    public: using VectorType = typename FromPolicy<PolicyT>::template Use<LinearVector>;
+    using Scalar = typename PolicyT::Scalar;
+    using VectorType = typename FromPolicy<PolicyT>::template Use<LinearVector>;
   
     /// \brief The hit point in the world coordinates
     VectorType point;
+
+    /// \brief The fraction from "from" point to "to" point
+    Scalar fraction;
+
+    /// \brief The normal at the point in the world coordinates
+    VectorType normal;
   };
 
   public: template <typename PolicyT, typename FeaturesT>
