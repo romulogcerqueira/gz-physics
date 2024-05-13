@@ -15,12 +15,12 @@
  *
  */
 
-#ifndef GZ_PHYSICS_DETAIL_GETRAYINTERSECTIONS_HH_
-#define GZ_PHYSICS_DETAIL_GETRAYINTERSECTIONS_HH_
+#ifndef GZ_PHYSICS_DETAIL_GETRAYINTERSECTION_HH_
+#define GZ_PHYSICS_DETAIL_GETRAYINTERSECTION_HH_
 
 #include <utility>
 #include <vector>
-#include <gz/physics/GetRayIntersections.hh>
+#include <gz/physics/GetRayIntersection.hh>
 
 namespace gz
 {
@@ -28,14 +28,14 @@ namespace physics
 {
 /////////////////////////////////////////////////
 template <typename PolicyT, typename FeaturesT>
-auto GetRayIntersectionsFromLastStepFeature::World<
-    PolicyT, FeaturesT>::GetRayIntersectionsFromLastStep(
+auto GetRayIntersectionFromLastStepFeature::World<
+    PolicyT, FeaturesT>::GetRayIntersectionFromLastStep(
       const VectorType &_from, const VectorType &_to
     ) const -> RayIntersectionData
 {
   auto result =
-      this->template Interface<GetRayIntersectionsFromLastStepFeature>()
-          ->GetRayIntersectionsFromLastStep(this->identity, _from, _to);
+      this->template Interface<GetRayIntersectionFromLastStepFeature>()
+          ->GetRayIntersectionFromLastStep(this->identity, _from, _to);
 
   RayIntersection intersection{
     result.point,

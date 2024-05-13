@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef GZ_PHYSICS_GETRAYINTERSECTIONS_HH_
-#define GZ_PHYSICS_GETRAYINTERSECTIONS_HH_
+#ifndef GZ_PHYSICS_GETRAYINTERSECTION_HH_
+#define GZ_PHYSICS_GETRAYINTERSECTION_HH_
 
 #include <vector>
 #include <gz/physics/FeatureList.hh>
@@ -28,9 +28,9 @@ namespace gz
 {
 namespace physics
 {
-/// \brief GetRayIntersectionsFromLastStepFeature is a feature for retrieving the list
-/// of ray intersections generated in the previous simulation step.
-class GZ_PHYSICS_VISIBLE GetRayIntersectionsFromLastStepFeature
+/// \brief GetRayIntersectionFromLastStepFeature is a feature for retrieving the a
+/// ray intersection generated in the previous simulation step.
+class GZ_PHYSICS_VISIBLE GetRayIntersectionFromLastStepFeature
     : public virtual FeatureWithRequirements<ForwardStep>
 {
   public: template <typename PolicyT>
@@ -42,7 +42,7 @@ class GZ_PHYSICS_VISIBLE GetRayIntersectionsFromLastStepFeature
     /// \brief The hit point in the world coordinates
     VectorType point;
 
-    /// \brief The fraction from "from" point to "to" point
+    /// The fraction from "from" point to "to" point
     Scalar fraction;
 
     /// \brief The normal at the point in the world coordinates
@@ -56,8 +56,8 @@ class GZ_PHYSICS_VISIBLE GetRayIntersectionsFromLastStepFeature
     public: using RayIntersection = RayIntersectionT<PolicyT>;
     public: using RayIntersectionData = SpecifyData<RequireData<RayIntersection>>;
 
-    /// \brief Get intersections generated in the previous simulation step
-    public: RayIntersectionData GetRayIntersectionsFromLastStep(
+    /// \brief Get intersection generated in the previous simulation step
+    public: RayIntersectionData GetRayIntersectionFromLastStep(
       const VectorType &_from, const VectorType &_to) const;
   };
 
@@ -67,7 +67,7 @@ class GZ_PHYSICS_VISIBLE GetRayIntersectionsFromLastStepFeature
     public: using RayIntersection = RayIntersectionT<PolicyT>;
     public: using VectorType = typename FromPolicy<PolicyT>::template Use<LinearVector>;
 
-    public: virtual RayIntersection GetRayIntersectionsFromLastStep(
+    public: virtual RayIntersection GetRayIntersectionFromLastStep(
       const Identity &_worldID,
       const VectorType &_from,
       const VectorType &_to) const = 0;
@@ -76,6 +76,6 @@ class GZ_PHYSICS_VISIBLE GetRayIntersectionsFromLastStepFeature
 }
 }
 
-#include "gz/physics/detail/GetRayIntersections.hh"
+#include "gz/physics/detail/GetRayIntersection.hh"
 
-#endif /* end of include guard: GZ_PHYSICS_GETRAYINTERSECTIONS_HH_ */
+#endif /* end of include guard: GZ_PHYSICS_GETRAYINTERSECTION_HH_ */
