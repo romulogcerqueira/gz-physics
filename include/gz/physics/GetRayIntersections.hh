@@ -33,29 +33,27 @@ namespace physics
 class GZ_PHYSICS_VISIBLE GetRayIntersectionsFromLastStepFeature
     : public virtual FeatureWithRequirements<ForwardStep>
 {
+  public: template <typename PolicyT>
+  struct RayIntersectionT
+  {
+    public: using Scalar = typename PolicyT::Scalar;
+    public: using VectorType = typename FromPolicy<PolicyT>::template Use<LinearVector>;
+
+    /// \brief The hit point in the world coordinates
+    VectorType point;
+
+    /// \brief The fraction from "from" point to "to" point
+    Scalar fraction;
+
+    /// \brief The normal at the point in the world coordinates
+    VectorType normal;
+  };
+
   public: template <typename PolicyT, typename FeaturesT>
   class World : public virtual Feature::World<PolicyT, FeaturesT>
   {
-    public: using Scalar = typename PolicyT::Scalar;
-    public: using ShapePtrType = ShapePtr<PolicyT, FeaturesT>;
     public: using VectorType = typename FromPolicy<PolicyT>::template Use<LinearVector>;
-
-    struct RayIntersection
-    {
-      /// \brief The collision shape the ray hit
-      ShapePtrType collision;
-
-      /// \brief The hit point in the world coordinates
-      VectorType point;
-
-      /// \brief The fraction from "from" point to "to" point
-      Scalar fraction;
-
-      /// \brief The normal at the point in the world coordinates
-      VectorType normal;
-    };
-
-    // public: using RayIntersection = RayIntersectionT<PolicyT>;
+    public: using RayIntersection = RayIntersectionT<PolicyT>;
     public: using RayIntersectionData = SpecifyData<RequireData<RayIntersection>>;
 
     /// \brief Get intersections generated in the previous simulation step
@@ -66,26 +64,10 @@ class GZ_PHYSICS_VISIBLE GetRayIntersectionsFromLastStepFeature
   public: template <typename PolicyT>
   class Implementation : public virtual Feature::Implementation<PolicyT>
   {
-    // public: using RayIntersection = RayIntersectionT<PolicyT>;
-    public: using Scalar = typename PolicyT::Scalar;
+    public: using RayIntersection = RayIntersectionT<PolicyT>;
     public: using VectorType = typename FromPolicy<PolicyT>::template Use<LinearVector>;
 
-    public: struct RayIntersectionInternal
-    {
-      /// \brief Identity of the collision object
-      // Identity collision;
-
-      /// \brief The hit point in the world coordinates
-      VectorType point;
-
-      /// \brief The fraction from "from" point to "to" point
-      Scalar fraction;
-
-      /// \brief The normal at the point in the world coordinates
-      VectorType normal;
-    };
-
-    public: virtual RayIntersectionInternal GetRayIntersectionsFromLastStep(
+    public: virtual RayIntersection GetRayIntersectionsFromLastStep(
       const Identity &_worldID,
       const VectorType &_from,
       const VectorType &_to) const = 0;

@@ -38,10 +38,9 @@ auto GetRayIntersectionsFromLastStepFeature::World<
           ->GetRayIntersectionsFromLastStep(this->identity, _from, _to);
 
   RayIntersection intersection{
-      ShapePtrType(this->pimpl, result.collision),
-      result.point,
-      result.fraction,
-      result.normal
+    result.point,
+    result.fraction,
+    result.normal
   };
 
   RayIntersectionData output;

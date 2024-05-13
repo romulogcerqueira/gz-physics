@@ -100,7 +100,7 @@ class SimulationFeatures :
     ::ContactInternal;
 
   public: using GetRayIntersectionsFromLastStepFeature::Implementation<FeaturePolicy3d>
-    ::RayIntersectionInternal;
+    ::RayIntersection;
 
   public: SimulationFeatures() = default;
   public: ~SimulationFeatures() override = default;
@@ -118,7 +118,7 @@ class SimulationFeatures :
   public: std::vector<ContactInternal> GetContactsFromLastStep(
       const Identity &_worldID) const override;
 
-  public: RayIntersectionInternal GetRayIntersectionsFromLastStep(
+  public: RayIntersection GetRayIntersectionsFromLastStep(
       const Identity &_worldID,
       const LinearVector3d &_from,
       const LinearVector3d &_end) const override;

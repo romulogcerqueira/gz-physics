@@ -165,28 +165,21 @@ void SimulationFeatures::Write(ChangedWorldPoses &_changedPoses) const
   this->prevLinkPoses = std::move(newPoses);
 }
 
-SimulationFeatures::RayIntersectionInternal
+SimulationFeatures::RayIntersection
 SimulationFeatures::GetRayIntersectionsFromLastStep(
   const Identity &_worldID,
   const LinearVector3d &_from,
   const LinearVector3d &_to) const
 {
-  SimulationFeatures::RayIntersectionInternal out;
-  // out.collision = _worldID;
-
+  SimulationFeatures::RayIntersection intersection;
   auto *const world = this->ReferenceInterface<DartWorld>(_worldID);
-  
-  Eigen::Vector3d from(_from[0], _from[1], _from[2]);
-  Eigen::Vector3d to(_to[0], _to[1], _to[2]);
 
-  dart::collision::RaycastResult result;
-  auto solver = world->getConstraintSolver();
-  auto detector = solver->getCollisionDetector();
-  auto group = solver->getCollisionGroup().get();
+  auto detector = world->getConstraintSolver()->getCollisionDetector();
+  auto group = world->getConstraintSolver()->getCollisionGroup().get();
   auto option = dart::collision::RaycastOption();
 
-  bool has_hit = 
-    detector->raycast(group, from, to, option, &result);
+  dart::collision::RaycastResult result;
+  bool has_hit = detector->raycast(group, _from, _to, option, &result);
 
   std::cout << "====== RAYCAST RESULT" << std::endl;
   std::cout << "Has hit: " << has_hit << std::endl;
@@ -196,13 +189,12 @@ SimulationFeatures::GetRayIntersectionsFromLastStep(
     std::cout << "  Fraction: " << result.mRayHits[i].mFraction << std::endl;
     std::cout << "  Normal: " << result.mRayHits[i].mNormal.transpose() << std::endl;
 
-    out.point = result.mRayHits[i].mPoint;
-    out.normal = result.mRayHits[i].mNormal;
-    out.fraction = result.mRayHits[i].mFraction;
+    intersection.point = result.mRayHits[i].mPoint;
+    intersection.normal = result.mRayHits[i].mNormal;
+    intersection.fraction = result.mRayHits[i].mFraction;
   }
 
-
-  return out;
+  return intersection;
 }
 
 std::vector<SimulationFeatures::ContactInternal>
