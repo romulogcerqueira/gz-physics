@@ -43,6 +43,7 @@
 #include "gz/physics/EllipsoidShape.hh"
 #include <gz/physics/FreeGroup.hh>
 #include <gz/physics/GetBoundingBox.hh>
+#include <gz/physics/GetRayIntersection.hh>
 #include "gz/physics/SphereShape.hh"
 
 #include <gz/physics/ConstructEmpty.hh>
@@ -64,6 +65,8 @@ struct Features : gz::physics::FeatureList<
 
   gz::physics::GetContactsFromLastStepFeature,
   gz::physics::CollisionFilterMaskFeature,
+
+  gz::physics::GetRayIntersectionFromLastStepFeature,
 
   gz::physics::GetModelFromWorld,
   gz::physics::GetLinkFromModel,
@@ -218,6 +221,63 @@ TYPED_TEST(SimulationFeaturesContactsTest, Contacts)
     auto contacts = world->GetContactsFromLastStep();
     // Large box collides with other shapes
     EXPECT_NE(0u, contacts.size());
+  }
+}
+
+// The features that an engine must have to be loaded by this loader.
+struct FeaturesRayIntersection : gz::physics::FeatureList<
+  gz::physics::sdf::ConstructSdfWorld,
+  gz::physics::GetRayIntersectionFromLastStepFeature,
+  gz::physics::ForwardStep
+> {};
+
+template <class T>
+class SimulationFeaturesRayIntersectionTest :
+  public SimulationFeaturesTest<T>{};
+using SimulationFeaturesRayIntersectionTestTypes =
+  ::testing::Types<FeaturesRayIntersection>;
+TYPED_TEST_SUITE(SimulationFeaturesRayIntersectionTest,
+                 SimulationFeaturesRayIntersectionTestTypes);
+
+/////////////////////////////////////////////////
+TYPED_TEST(SimulationFeaturesRayIntersectionTest, RayIntersections)
+{
+  for (const std::string &name : this->pluginNames)
+  {
+    std::cout << "Name: " << name << std::endl;
+
+    auto world = LoadPluginAndWorld<FeaturesRayIntersection>(
+        this->loader,
+        name,
+        common_test::worlds::kRayIntersectionSdf);
+    auto checkedOutput = StepWorld<FeaturesRayIntersection>(world, true, 1).first;
+    EXPECT_TRUE(checkedOutput);
+
+    // ray does hit the box collision
+    Eigen::Vector3d from(0, 0, -3);
+    Eigen::Vector3d to(0, 0, 3);
+
+    auto intersection = world->GetRayIntersectionFromLastStep(from, to);
+
+    auto rayIntersection =
+        intersection.template Get<gz::physics::World3d<Features>::RayIntersection>();
+
+    std::cout << "Point   : " << rayIntersection.point.transpose() << std::endl;
+    std::cout << "Normal  : " << rayIntersection.normal.transpose() << std::endl;
+    std::cout << "Fraction: " << rayIntersection.fraction << std::endl;
+
+    // // ray does not hit the box collision
+    // Eigen::Vector3d from(0, 0, -3);
+    // Eigen::Vector3d to(0, 0, 3);
+
+    // auto intersection = world->GetRayIntersectionFromLastStep(from, to);
+
+    // auto rayIntersection =
+    //     intersection.template Get<gz::physics::World3d<Features>::RayIntersection>();
+
+    // std::cout << "Point   : " << rayIntersection.point.transpose() << std::endl;
+    // std::cout << "Normal  : " << rayIntersection.normal.transpose() << std::endl;
+    // std::cout << "Fraction: " << rayIntersection.fraction << std::endl;
   }
 }
 
@@ -921,6 +981,8 @@ struct FeaturesContactPropertiesCallback : gz::physics::FeatureList<
 
   gz::physics::GetContactsFromLastStepFeature,
   gz::physics::CollisionFilterMaskFeature,
+
+  gz::physics::GetRayIntersectionFromLastStepFeature,
 
   gz::physics::GetModelFromWorld,
   gz::physics::GetLinkFromModel,

@@ -45,6 +45,7 @@ const auto kMimicUniversalWorld = CommonTestWorld("mimic_universal_world.sdf");
 const auto kMultipleCollisionsSdf = CommonTestWorld("multiple_collisions.sdf");
 const auto kPendulumJointWrenchSdf =
   CommonTestWorld("pendulum_joint_wrench.sdf");
+const auto kRayIntersectionSdf = CommonTestWorld("ray_intersection.sdf");
 const auto kShapesWorld = CommonTestWorld("shapes.world");
 const auto kShapesBitmaskWorld = CommonTestWorld("shapes_bitmask.sdf");
 const auto kSlipComplianceSdf = CommonTestWorld("slip_compliance.sdf");

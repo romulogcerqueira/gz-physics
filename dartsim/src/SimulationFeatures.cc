@@ -177,11 +177,13 @@ SimulationFeatures::GetRayIntersectionFromLastStep(
   auto collisionDetector = world->getConstraintSolver()->getCollisionDetector();
   auto collisionGroup = world->getConstraintSolver()->getCollisionGroup().get();
 
+  std::cout << "Collision detector: " << collisionDetector->getType() << std::endl;
+
   auto option = dart::collision::RaycastOption();
   option.mEnableAllHits = false;
 
   dart::collision::RaycastResult result;
-  collisionDetector->raycast(collisionGroup, _from, _to, option, &result);
+  bool hit = collisionDetector->raycast(collisionGroup, _from, _to, option, &result);
 
   // If there is a hit, store the intersection data
   if (result.hasHit()) {
