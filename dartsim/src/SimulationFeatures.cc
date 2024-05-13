@@ -165,13 +165,15 @@ void SimulationFeatures::Write(ChangedWorldPoses &_changedPoses) const
   this->prevLinkPoses = std::move(newPoses);
 }
 
-SimulationFeatures::RayIntersection
+SimulationFeatures::RayIntersectionInternal
 SimulationFeatures::GetRayIntersectionsFromLastStep(
   const Identity &_worldID,
   const LinearVector3d &_from,
   const LinearVector3d &_to) const
 {
-  SimulationFeatures::RayIntersection out;
+  SimulationFeatures::RayIntersectionInternal out;
+  // out.collision = _worldID;
+
   auto *const world = this->ReferenceInterface<DartWorld>(_worldID);
   
   Eigen::Vector3d from(_from[0], _from[1], _from[2]);
@@ -209,9 +211,6 @@ SimulationFeatures::GetContactsFromLastStep(const Identity &_worldID) const
   std::vector<SimulationFeatures::ContactInternal> outContacts;
   auto *const world = this->ReferenceInterface<DartWorld>(_worldID);
   const auto colResult = world->getLastCollisionResult();
-
-  // world->getConstraintSolver()->getCollisionDetector()->raycast(
-  //   Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero());
 
   for (const auto &dtContact : colResult.getContacts())
   {
