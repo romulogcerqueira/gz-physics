@@ -486,7 +486,7 @@ Identity SDFFeatures::ConstructSdfWorld(
   // remaining physics parameters are loaded with dartsim's default physics.
   auto physicsElem = _sdfWorld.PhysicsDefault()->Element();
 
-  if (physicsElem->HasElement("dart"))
+  if (physicsElem && physicsElem->HasElement("dart"))
   {
     auto dartElem = physicsElem->GetElement("dart");
 
@@ -512,7 +512,7 @@ Identity SDFFeatures::ConstructSdfWorld(
         solver->setCollisionDetector(dart::collision::DARTCollisionDetector::create());
       }
       else {
-        gzerr << "Collision detector [" << collisionDetectorName
+        gzwarn << "Collision detector [" << collisionDetectorName
               << "] is not supported, defaulting to ["
               << solver->getCollisionDetector()->getType() << "]." << std::endl;
       }
