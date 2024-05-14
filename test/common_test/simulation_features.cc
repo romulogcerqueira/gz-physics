@@ -54,6 +54,7 @@
 #include <gz/physics/World.hh>
 
 #include <sdf/Root.hh>
+#include <sdf/Physics.hh>
 
 // The features that an engine must have to be loaded by this loader.
 struct Features : gz::physics::FeatureList<
@@ -110,6 +111,7 @@ class SimulationFeaturesTest:
     // TODO(ahcorde): We should also run the 3f, 2d, and 2f variants of
     // FindFeatures
     pluginNames = gz::physics::FindFeatures3d<T>::From(loader);
+
     if (pluginNames.empty())
     {
       std::cerr << "No plugins with required features found in "
@@ -140,6 +142,7 @@ gz::physics::World3dPtr<T> LoadPluginAndWorld(
   const sdf::Errors &errors = root.Load(_world);
   EXPECT_EQ(0u, errors.size());
   const sdf::World *sdfWorld = root.WorldByIndex(0);
+
   auto world = engine->ConstructWorld(*sdfWorld);
   EXPECT_NE(nullptr, world);
   return world;
@@ -244,8 +247,6 @@ TYPED_TEST(SimulationFeaturesRayIntersectionTest, RayIntersections)
 {
   for (const std::string &name : this->pluginNames)
   {
-    std::cout << "Name: " << name << std::endl;
-
     auto world = LoadPluginAndWorld<FeaturesRayIntersection>(
         this->loader,
         name,
@@ -981,8 +982,6 @@ struct FeaturesContactPropertiesCallback : gz::physics::FeatureList<
 
   gz::physics::GetContactsFromLastStepFeature,
   gz::physics::CollisionFilterMaskFeature,
-
-  gz::physics::GetRayIntersectionFromLastStepFeature,
 
   gz::physics::GetModelFromWorld,
   gz::physics::GetLinkFromModel,

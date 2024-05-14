@@ -1,16 +1,15 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
-  <world name="default">
+  <world name="ray_intersection_world">
     <gravity>0 0 0</gravity>
-    <physics name="1ms" type="dart">
-      <max_step_size>0.001</max_step_size>
-      <real_time_factor>0</real_time_factor>
-      <dart>
-        <collision_detector>bullet</collision_detector>
-      </dart>
+    <physics type="dart">
+      <!-- <dart>
+        <collision_detector>dart</collision_detector>
+      </dart> -->
     </physics>
 
     <model name="box">
+      <static>true</static>
       <pose>0 0 1 0 0 0</pose>
       <link name="box_link">
         <inertial>

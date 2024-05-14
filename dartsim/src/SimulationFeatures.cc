@@ -171,7 +171,6 @@ SimulationFeatures::GetRayIntersectionFromLastStep(
   const LinearVector3d &_from,
   const LinearVector3d &_to) const
 {
-  SimulationFeatures::RayIntersection intersection;
   auto *const world = this->ReferenceInterface<DartWorld>(_worldID);
 
   auto collisionDetector = world->getConstraintSolver()->getCollisionDetector();
@@ -184,6 +183,8 @@ SimulationFeatures::GetRayIntersectionFromLastStep(
 
   dart::collision::RaycastResult result;
   bool hit = collisionDetector->raycast(collisionGroup, _from, _to, option, &result);
+
+  SimulationFeatures::RayIntersection intersection;
 
   // If there is a hit, store the intersection data
   if (result.hasHit()) {
