@@ -254,31 +254,36 @@ TYPED_TEST(SimulationFeaturesRayIntersectionTest, RayIntersections)
     auto checkedOutput = StepWorld<FeaturesRayIntersection>(world, true, 1).first;
     EXPECT_TRUE(checkedOutput);
 
-    // ray does hit the box collision
-    Eigen::Vector3d from(0, 0, -3);
-    Eigen::Vector3d to(0, 0, 3);
-
-    auto intersection = world->GetRayIntersectionFromLastStep(from, to);
-
+    // ray hits the sphere
+    auto result = world->GetRayIntersectionFromLastStep(Eigen::Vector3d(-2, 0, 0),
+                                                        Eigen::Vector3d( 2, 0, 0));
     auto rayIntersection =
-        intersection.template Get<gz::physics::World3d<Features>::RayIntersection>();
+        result.template Get<gz::physics::World3d<Features>::RayIntersection>();
 
-    std::cout << "Point   : " << rayIntersection.point.transpose() << std::endl;
-    std::cout << "Normal  : " << rayIntersection.normal.transpose() << std::endl;
-    std::cout << "Fraction: " << rayIntersection.fraction << std::endl;
+    double epsilon = 1e-3;
+    EXPECT_TRUE(rayIntersection.point.isApprox(Eigen::Vector3d(-1, 0, 0), epsilon));
+    EXPECT_TRUE(rayIntersection.normal.isApprox(Eigen::Vector3d(-1, 0, 0), epsilon));
+    EXPECT_DOUBLE_EQ(rayIntersection.fraction, 0.25);
 
-    // // ray does not hit the box collision
-    // Eigen::Vector3d from(0, 0, -3);
-    // Eigen::Vector3d to(0, 0, 3);
+    // ray hits the sphere
+    result = world->GetRayIntersectionFromLastStep(Eigen::Vector3d( 2, 0, 0),
+                                                   Eigen::Vector3d(-2, 0, 0));
+    rayIntersection =
+        result.template Get<gz::physics::World3d<Features>::RayIntersection>();
 
-    // auto intersection = world->GetRayIntersectionFromLastStep(from, to);
+    EXPECT_TRUE(rayIntersection.point.isApprox(Eigen::Vector3d(1, 0, 0), epsilon));
+    EXPECT_TRUE(rayIntersection.normal.isApprox(Eigen::Vector3d(1, 0, 0), epsilon));
+    EXPECT_DOUBLE_EQ(rayIntersection.fraction, 0.25);
 
-    // auto rayIntersection =
-    //     intersection.template Get<gz::physics::World3d<Features>::RayIntersection>();
+    // ray does not hit the sphere
+    result = world->GetRayIntersectionFromLastStep(Eigen::Vector3d( 2, 0, 5),
+                                                   Eigen::Vector3d(-2, 0, 5));
+    rayIntersection =
+        result.template Get<gz::physics::World3d<Features>::RayIntersection>();
 
-    // std::cout << "Point   : " << rayIntersection.point.transpose() << std::endl;
-    // std::cout << "Normal  : " << rayIntersection.normal.transpose() << std::endl;
-    // std::cout << "Fraction: " << rayIntersection.fraction << std::endl;
+    // ASSERT_TRUE(rayIntersection.point.array().isNaN().all());
+    // ASSERT_TRUE(rayIntersection.normal.array().isNaN().all());
+    // ASSERT_TRUE(std::isnan(rayIntersection.fraction));
   }
 }
 

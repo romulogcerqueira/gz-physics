@@ -3,15 +3,14 @@
   <world name="ray_intersection_world">
     <gravity>0 0 0</gravity>
     <physics type="dart">
-      <!-- <dart>
-        <collision_detector>dart</collision_detector>
-      </dart> -->
+      <dart>
+        <collision_detector>bullet</collision_detector>
+      </dart>
     </physics>
 
-    <model name="box">
+    <model name="sphere">
       <static>true</static>
-      <pose>0 0 1 0 0 0</pose>
-      <link name="box_link">
+      <link name="sphere_link">
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -23,11 +22,11 @@
           </inertia>
           <mass>1.0</mass>
         </inertial>
-        <collision name="box_collision">
+        <collision name="sphere_collision">
           <geometry>
-            <box>
-              <size>100 100 0.001</size>
-            </box>
+            <sphere>
+              <radius>1</radius>
+            </sphere>
           </geometry>
         </collision>
       </link>

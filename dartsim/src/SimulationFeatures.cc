@@ -182,16 +182,32 @@ SimulationFeatures::GetRayIntersectionFromLastStep(
   option.mEnableAllHits = false;
 
   dart::collision::RaycastResult result;
-  bool hit = collisionDetector->raycast(collisionGroup, _from, _to, option, &result);
-
   SimulationFeatures::RayIntersection intersection;
 
-  // If there is a hit, store the intersection data
-  if (result.hasHit()) {
-    intersection.point = result.mRayHits[0].mPoint;
-    intersection.normal = result.mRayHits[0].mNormal;
-    intersection.fraction = result.mRayHits[0].mFraction;
-  }
+
+
+
+
+
+  // try {
+    collisionDetector->raycast(collisionGroup, _from, _to, option, &result);
+    if (result.hasHit()) {
+      intersection.point = result.mRayHits[0].mPoint;
+      intersection.normal = result.mRayHits[0].mNormal;
+      intersection.fraction = result.mRayHits[0].mFraction;
+    }
+  // } catch(const std::exception& e) {};
+
+
+  // if (hit && !result.mRayHits.empty()) {
+  //   // Store intersection data if there is a ray hit
+
+  // } else {
+  //   // Set erroneous values to NaN according to REP-117
+  //   // intersection.point = Eigen::Vector3d::Constant(std::numeric_limits<double>::quiet_NaN());
+  //   // intersection.normal = Eigen::Vector3d::Constant(std::numeric_limits<double>::quiet_NaN());
+  //   // intersection.fraction = std::numeric_limits<double>::quiet_NaN();
+  // }
 
   return intersection;
 }
