@@ -181,13 +181,16 @@ SimulationFeatures::GetRayIntersectionFromLastStep(
   collisionDetector->raycast(collisionGroup, _from, _to, option, &result);
 
   SimulationFeatures::RayIntersection intersection;
-  if (result.hasHit()) {
+  if (result.hasHit())
+  {
     // Store intersection data if there is a ray hit
     const auto &firstHit = result.mRayHits[0];
     intersection.point = firstHit.mPoint;
     intersection.normal = firstHit.mNormal;
     intersection.fraction = firstHit.mFraction;
-  } else {
+  }
+  else
+  {
     // Set invalid measurements to NaN according to REP-117
     intersection.point = Eigen::Vector3d::Constant(std::numeric_limits<double>::quiet_NaN());
     intersection.normal = Eigen::Vector3d::Constant(std::numeric_limits<double>::quiet_NaN());

@@ -482,56 +482,42 @@ Identity SDFFeatures::ConstructSdfWorld(
 
   world->setGravity(math::eigen3::convert(_sdfWorld.Gravity()));
 
-  // TODO(MXG): Add a Physics class to the SDFormat DOM and then parse that
-  // information here. For now, we'll just use dartsim's default physics
-  // parameters.
-  auto physics = _sdfWorld.PhysicsDefault();
-  auto physicsElement = physics->Element();
+  // TODO: Currently, the dartsim's collision detector is parsed, while the
+  // remaining physics parameters are loaded with dartsim's default physics.
+  auto physicsElem = _sdfWorld.PhysicsDefault()->Element();
 
-  if (physicsElement->HasElement("dart")) {
-    auto dartElement = physicsElement->GetElement("dart");
+  if (physicsElem->HasElement("dart"))
+  {
+    auto dartElem = physicsElem->GetElement("dart");
 
-    if(dartElement->HasElement("collision_detector")) {
-      std::string collisionDetectorName = dartElement->Get<std::string>("collision_detector");
+    if (dartElem->HasElement("collision_detector"))
+    {
+      std::string collisionDetectorName = dartElem->Get<std::string>("collision_detector");
+      auto solver = world->getConstraintSolver();
 
       if (collisionDetectorName == "bullet")
       {
-        world->getConstraintSolver()->setCollisionDetector(
-          dart::collision::BulletCollisionDetector::create());
+        solver->setCollisionDetector(dart::collision::BulletCollisionDetector::create());
       }
       else if (collisionDetectorName == "fcl")
       {
-        world->getConstraintSolver()->setCollisionDetector(
-          dart::collision::FCLCollisionDetector::create());
+        solver->setCollisionDetector(dart::collision::FCLCollisionDetector::create());
       }
       else if (collisionDetectorName == "ode")
       {
-        world->getConstraintSolver()->setCollisionDetector(
-          dart::collision::GzOdeCollisionDetector::create());
+        solver->setCollisionDetector(dart::collision::GzOdeCollisionDetector::create());
       }
       else if (collisionDetectorName == "dart")
       {
-        world->getConstraintSolver()->setCollisionDetector(
-          dart::collision::DARTCollisionDetector::create());
+        solver->setCollisionDetector(dart::collision::DARTCollisionDetector::create());
       }
-      // else {
-      //   gzerr << "Collision detector [" << _collisionDetector
-      //         << "] is not supported, defaulting to ["
-      //         << collisionDetector << "]." << std::endl;
+      else {
+        gzerr << "Collision detector [" << collisionDetectorName
+              << "] is not supported, defaulting to ["
+              << solver->getCollisionDetector()->getType() << "]." << std::endl;
       }
+    }
   }
-
-  // while(physicsElement) {
-  //   if (physicsElement->GetName() == "dart") {
-  //     auto dartElement = physicsElement->GetElement("dart");
-  //     // world->setTimeStep(physicsElement->Get<double>());
-  //   }
-  //   physicsElement = physicsElement->GetNextElement();
-  // }
-
-
-  // world->getConstraintSolver()->setCollisionDetector(
-  //     dart::collision::BulletCollisionDetector::create());
 
   for (std::size_t i = 0; i < _sdfWorld.ModelCount(); ++i)
   {

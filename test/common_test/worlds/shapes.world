@@ -1,16 +1,6 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
   <world name="default">
-    <physics type="dart">
-      <max_step_size>0.001</max_step_size>
-      <real_time_factor>0</real_time_factor>
-      <dart>
-        <collision_detector>bullet</collision_detector>
-      </dart>
-      <simbody>
-        <collision_detector>bullet</collision_detector>
-      </simbody>
-    </physics>
     <model name="sphere">
       <pose>0 1.5 0.5 0 0 0</pose>
       <link name="sphere_link">
