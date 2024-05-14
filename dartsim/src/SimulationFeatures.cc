@@ -172,11 +172,8 @@ SimulationFeatures::GetRayIntersectionFromLastStep(
   const LinearVector3d &_to) const
 {
   auto *const world = this->ReferenceInterface<DartWorld>(_worldID);
-
   auto collisionDetector = world->getConstraintSolver()->getCollisionDetector();
   auto collisionGroup = world->getConstraintSolver()->getCollisionGroup().get();
-
-  std::cout << "Collision detector: " << collisionDetector->getType() << std::endl;
 
   auto option = dart::collision::RaycastOption();
   option.mEnableAllHits = false;
@@ -184,30 +181,21 @@ SimulationFeatures::GetRayIntersectionFromLastStep(
   dart::collision::RaycastResult result;
   SimulationFeatures::RayIntersection intersection;
 
+  // Perform raycast
+  collisionDetector->raycast(collisionGroup, _from, _to, option, &result);
 
-
-
-
-
-  // try {
-    collisionDetector->raycast(collisionGroup, _from, _to, option, &result);
-    if (result.hasHit()) {
-      intersection.point = result.mRayHits[0].mPoint;
-      intersection.normal = result.mRayHits[0].mNormal;
-      intersection.fraction = result.mRayHits[0].mFraction;
-    }
-  // } catch(const std::exception& e) {};
-
-
-  // if (hit && !result.mRayHits.empty()) {
-  //   // Store intersection data if there is a ray hit
-
-  // } else {
-  //   // Set erroneous values to NaN according to REP-117
-  //   // intersection.point = Eigen::Vector3d::Constant(std::numeric_limits<double>::quiet_NaN());
-  //   // intersection.normal = Eigen::Vector3d::Constant(std::numeric_limits<double>::quiet_NaN());
-  //   // intersection.fraction = std::numeric_limits<double>::quiet_NaN();
-  // }
+  if (result.hasHit()) {
+    // Store intersection data if there is a ray hit
+    const auto &firstHit = result.mRayHits[0];
+    intersection.point = firstHit.mPoint;
+    intersection.normal = firstHit.mNormal;
+    intersection.fraction = firstHit.mFraction;
+  } else {
+    // Set invalid measurements to NaN according to REP-117
+    intersection.point = Eigen::Vector3d::Constant(std::numeric_limits<double>::quiet_NaN());
+    intersection.normal = Eigen::Vector3d::Constant(std::numeric_limits<double>::quiet_NaN());
+    intersection.fraction = std::numeric_limits<double>::quiet_NaN();
+  }
 
   return intersection;
 }

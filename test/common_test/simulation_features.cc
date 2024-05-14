@@ -281,9 +281,9 @@ TYPED_TEST(SimulationFeaturesRayIntersectionTest, RayIntersections)
     rayIntersection =
         result.template Get<gz::physics::World3d<Features>::RayIntersection>();
 
-    // ASSERT_TRUE(rayIntersection.point.array().isNaN().all());
-    // ASSERT_TRUE(rayIntersection.normal.array().isNaN().all());
-    // ASSERT_TRUE(std::isnan(rayIntersection.fraction));
+    ASSERT_TRUE(rayIntersection.point.array().isNaN().any());
+    ASSERT_TRUE(rayIntersection.normal.array().isNaN().any());
+    ASSERT_TRUE(std::isnan(rayIntersection.fraction));
   }
 }
 
