@@ -175,15 +175,12 @@ SimulationFeatures::GetRayIntersectionFromLastStep(
   auto collisionDetector = world->getConstraintSolver()->getCollisionDetector();
   auto collisionGroup = world->getConstraintSolver()->getCollisionGroup().get();
 
-  auto option = dart::collision::RaycastOption();
-  option.mEnableAllHits = false;
-
-  dart::collision::RaycastResult result;
-  SimulationFeatures::RayIntersection intersection;
-
   // Perform raycast
+  dart::collision::RaycastOption option;
+  dart::collision::RaycastResult result;
   collisionDetector->raycast(collisionGroup, _from, _to, option, &result);
 
+  SimulationFeatures::RayIntersection intersection;
   if (result.hasHit()) {
     // Store intersection data if there is a ray hit
     const auto &firstHit = result.mRayHits[0];
