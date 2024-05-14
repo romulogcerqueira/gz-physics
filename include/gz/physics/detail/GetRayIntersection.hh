@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Open Source Robotics Foundation
+ * Copyright (C) 2024 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,18 +30,12 @@ namespace physics
 template <typename PolicyT, typename FeaturesT>
 auto GetRayIntersectionFromLastStepFeature::World<
     PolicyT, FeaturesT>::GetRayIntersectionFromLastStep(
-      const VectorType &_from, const VectorType &_to
-    ) const -> RayIntersectionData
+      const VectorType &_from, const VectorType &_to) const -> RayIntersectionData
 {
-  auto result =
-      this->template Interface<GetRayIntersectionFromLastStepFeature>()
-          ->GetRayIntersectionFromLastStep(this->identity, _from, _to);
+  auto result = this->template Interface<GetRayIntersectionFromLastStepFeature>()
+                  ->GetRayIntersectionFromLastStep(this->identity, _from, _to);
 
-  RayIntersection intersection{
-    result.point,
-    result.fraction,
-    result.normal
-  };
+  RayIntersection intersection{result.point, result.fraction, result.normal};
 
   RayIntersectionData output;
   output.template Get<RayIntersection>() = std::move(intersection);

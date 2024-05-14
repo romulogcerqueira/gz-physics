@@ -45,7 +45,7 @@ class GZ_PHYSICS_VISIBLE GetRayIntersectionFromLastStepFeature
     /// The fraction from "from" point to "to" point
     Scalar fraction;
 
-    /// \brief The normal at the point in the world coordinates
+    /// \brief The normal at the hit point in the world coordinates
     VectorType normal;
   };
 
@@ -56,7 +56,7 @@ class GZ_PHYSICS_VISIBLE GetRayIntersectionFromLastStepFeature
     public: using RayIntersection = RayIntersectionT<PolicyT>;
     public: using RayIntersectionData = SpecifyData<RequireData<RayIntersection>>;
 
-    /// \brief Get intersection generated in the previous simulation step
+    /// \brief Get ray intersection generated in the previous simulation step
     public: RayIntersectionData GetRayIntersectionFromLastStep(
       const VectorType &_from, const VectorType &_to) const;
   };
