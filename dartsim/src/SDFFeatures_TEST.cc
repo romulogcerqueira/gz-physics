@@ -17,6 +17,7 @@
 
 #include <type_traits>
 
+#include <dart/constraint/ConstraintSolver.hpp>
 #include <dart/dynamics/BodyNode.hpp>
 #include <dart/dynamics/DegreeOfFreedom.hpp>
 #include <dart/dynamics/FreeJoint.hpp>
@@ -982,4 +983,17 @@ TEST_P(SDFFeatures_TEST, Shapes)
     EXPECT_EQ(name, skeleton->getName());
     ASSERT_EQ(1u, skeleton->getNumBodyNodes());
   }
+}
+
+/////////////////////////////////////////////////
+TEST_P(SDFFeatures_TEST, ParsesDartCollisionDetector)
+{
+  WorldPtr world = this->LoadWorld(common_test::worlds::kRayIntersectionSdf);
+  ASSERT_NE(nullptr, world);
+
+  auto dartWorld = world->GetDartsimWorld();
+  ASSERT_NE(nullptr, dartWorld);
+
+  auto collisionDetector = dartWorld->getConstraintSolver()->getCollisionDetector();
+  ASSERT_STREQ("bullet", collisionDetector->getType().c_str());
 }
